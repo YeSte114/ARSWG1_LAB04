@@ -5,10 +5,13 @@
  */
 package edu.eci.arsw.blueprints.services;
 
+import edu.eci.arsw.blueprints.filter.Filter;
 import edu.eci.arsw.blueprints.model.Blueprint;
 import edu.eci.arsw.blueprints.model.Point;
 import edu.eci.arsw.blueprints.persistence.BlueprintNotFoundException;
 import edu.eci.arsw.blueprints.persistence.BlueprintsPersistence;
+
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -24,9 +27,16 @@ public class BlueprintsServices {
    
     @Autowired
     BlueprintsPersistence bpp=null;
+    Filter bpf;
 
     
     public void addNewBlueprint(Blueprint bp){
+        try {
+            bpp.saveBlueprint(bp);
+
+        }catch (Exception e){
+            throw new UnsupportedOperationException("Error con los servicios");
+        }
         
     }
     
@@ -42,7 +52,14 @@ public class BlueprintsServices {
      * @throws BlueprintNotFoundException if there is no such blueprint
      */
     public Blueprint getBlueprint(String author,String name) throws BlueprintNotFoundException{
-        throw new UnsupportedOperationException("Not supported yet."); 
+        Blueprint blueprint;
+        try {
+            blueprint = bpp.getBlueprint(author,name);
+            blueprint=bpf.filterPoints(blueprint);
+        }catch (Exception e){
+            throw new UnsupportedOperationException("Error con los servicios");
+        }
+
     }
     
     /**
@@ -52,7 +69,20 @@ public class BlueprintsServices {
      * @throws BlueprintNotFoundException if the given author doesn't exist
      */
     public Set<Blueprint> getBlueprintsByAuthor(String author) throws BlueprintNotFoundException{
-        throw new UnsupportedOperationException("Not supported yet."); 
+
+        Set<Blueprint> blueprints;
+        Set<Blueprint> blueprintsFiltered = new HashSet<>();
+
+        try {
+            blueprints = bpp.getBlueprintByAuthor(author);
+            for(Blueprint bp: blueprints){
+                bp = bpf.filterPoints(bp);
+                blueprintsFiltered.add(bp);
+            }
+        }catch (Exception e){
+            throw new UnsupportedOperationException("Error con los servicios");
+        }
+        return blueprintsFiltered;
     }
     
 }
