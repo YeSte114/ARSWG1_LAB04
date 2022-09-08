@@ -7,13 +7,10 @@ package edu.eci.arsw.blueprints.services;
 
 import edu.eci.arsw.blueprints.filter.Filter;
 import edu.eci.arsw.blueprints.model.Blueprint;
-import edu.eci.arsw.blueprints.model.Point;
 import edu.eci.arsw.blueprints.persistence.BlueprintNotFoundException;
 import edu.eci.arsw.blueprints.persistence.BlueprintsPersistence;
 
 import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,10 +45,9 @@ public class BlueprintsServices {
      * 
      * @param author blueprint's author
      * @param name blueprint's name
-     * @return the blueprint of the given name created by the given author
      * @throws BlueprintNotFoundException if there is no such blueprint
      */
-    public Blueprint getBlueprint(String author,String name) throws BlueprintNotFoundException{
+    public void getBlueprint(String author, String name) throws BlueprintNotFoundException{
         Blueprint blueprint;
         try {
             blueprint = bpp.getBlueprint(author,name);
